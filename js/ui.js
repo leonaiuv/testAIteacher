@@ -351,8 +351,11 @@ function showProgressBar() {
     const lines = aiOutput.split(/\r?\n/);
     let questions = [];
     let curr = [];
+    const qStart = line =>
+      /^(\s*(\/\/|#))?\s*题目\s*\d+/.test(line) || /^(\s*(\/\/|#))?\s*第\s*\d+\s*题/.test(line);
+  
     lines.forEach(ln => {
-      if (/^\/\/\s*题目\d+/.test(ln)) {
+      if (qStart(ln)) {
         if (curr.length) questions.push(curr.join('\n'));
         curr = [ln];
       } else {
@@ -362,6 +365,7 @@ function showProgressBar() {
     if (curr.length) questions.push(curr.join('\n'));
     return questions.map(q => q.trim()).filter(q => q.length > 0);
   }
+  
   
   function getSelectedApiPack() {
     const pack = localStorage.getItem("selected_api_pack");
