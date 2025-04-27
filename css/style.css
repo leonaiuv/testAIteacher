@@ -18,7 +18,6 @@
     margin: 0;
     color: var(--text);
     min-height: 100vh;
-    /* 新增，防止footer遮挡内容 */
     padding-bottom: 60px;
   }
   header {
@@ -52,7 +51,6 @@
     justify-content: center;
   }
   
-  /* 主内容区横向排列，只保留出题和批改区 */
   #main-flex-row {
     width: 100%;
     display: flex;
@@ -73,8 +71,6 @@
     min-width: 200px;
     max-width: none;
   }
-  
-  /* 隐藏/移除设置栏主区（只用弹窗） */
   #ai-settings-section {
     display: none !important;
   }
@@ -270,19 +266,21 @@
     font-size: .99em;
     white-space: pre-wrap;
     box-shadow: 0 2px 6px #0001;
+    word-break: break-all;
+    max-width: 100%;
   }
   #review-output-block .stream-output {
     background: #f5f8ef;
     color: #287c41;
     border: 1.5px solid #b3e0c2;
-    word-break: break-all;
     white-space: pre-wrap;
+    word-break: break-all;
     overflow-x: auto;
     box-sizing: border-box;
     max-width: 100%;
-    max-height: 72vh; /* 可选，如果内容太多自动竖向滚动 */
+    max-height: 72vh;
+    overflow-y: auto;
   }
-  
   
   #progress-bar {
     position: fixed;
@@ -319,7 +317,7 @@
     border-color:#347cfb;
   }
   
-  /* 悬浮设置按钮和弹窗样式（如已用可忽略） */
+  /* 悬浮设置按钮和指引气泡 */
   .floating-settings-btn {
     position: fixed;
     top: 32px;
@@ -339,10 +337,55 @@
     cursor: pointer;
     transition: background .18s, box-shadow .18s;
   }
-  .floating-settings-btn:hover {
-    background: var(--primary-light);
-    box-shadow: 0 4px 20px #347cfb33;
+  .floating-settings-btn.guide-highlight {
+    box-shadow: 0 0 0 4px #ffe3a3, 0 4px 24px #347cfb33;
+    border-color: #ffd700;
+    animation: settings-btn-pulse 1.2s infinite alternate;
   }
+  @keyframes settings-btn-pulse {
+    from { box-shadow: 0 0 0 4px #ffe3a3, 0 4px 24px #347cfb33;}
+    to   { box-shadow: 0 0 0 14px #ffe3a3, 0 4px 24px #347cfb33;}
+  }
+  
+  .settings-guide-tip {
+    position: fixed;
+    top: 32px;
+    left: 95px; /* 挨着按钮右侧 */
+    background: #fffbe9;
+    color: #d97706;
+    border: 2px solid #ffe3a3;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px #ffd70025;
+    padding: 12px 24px;
+    z-index: 1100;
+    font-size: 1.10em;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    min-width: 230px;
+    max-width: 400px;
+    min-height: 48px;
+    line-height: 1.4;
+    animation: guide-tip-fadein 0.8s;
+    transition: opacity .2s;
+  }
+  @keyframes guide-tip-fadein {
+    from { opacity: 0; transform: translateY(-10px);}
+    to   { opacity: 1; transform: translateY(0);}
+  }
+  @media (max-width: 700px){
+    .settings-guide-tip {
+      left: 65px;
+      top: 74px;
+      min-width: 130px;
+      max-width: 92vw;
+      padding: 10px 12px;
+      font-size: 1em;
+    }
+    .floating-settings-btn {left: 12px; top: 12px;}
+  }
+  
+  /* 弹窗蒙层 */
   .modal {
     position: fixed;
     z-index: 1003;
@@ -357,9 +400,10 @@
     border-radius: 18px;
     box-shadow: 0 6px 40px #0003;
     padding: 0 0 18px 0;
-    min-width: 390px;
-    max-width: 540px;
-    width: 90vw;
+    /* 修改如下： */
+    min-width: 500px;
+    max-width: 700px;
+    width: 95vw;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
@@ -404,12 +448,6 @@
     .floating-settings-btn { left: 12px; top: 12px;}
   }
   
-  /* 辅助样式 */
-  a { color: var(--primary); text-decoration: none;}
-  a:hover { text-decoration: underline; }
-  hr { border: none; border-top: 1.5px solid var(--border); margin: 22px 0; }
-  ::-webkit-scrollbar { height:8px; width:8px; background:#e0e0e0;}
-  ::-webkit-scrollbar-thumb { background: #b2c7e2; border-radius: 8px; }
   footer {
     background: #e8f0fe;
     color: #5c6f8c;
@@ -423,5 +461,206 @@
     bottom: 0;
     z-index: 999;
     box-shadow: 0 -2px 8px #347cfb0c;
+  }
+  
+  a { color: var(--primary); text-decoration: none;}
+  a:hover { text-decoration: underline; }
+  hr { border: none; border-top: 1.5px solid var(--border); margin: 22px 0; }
+  ::-webkit-scrollbar { height:8px; width:8px; background:#e0e0e0;}
+  ::-webkit-scrollbar-thumb { background: #b2c7e2; border-radius: 8px; }
+  .settings-modal-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 32px #0a0a1a12;
+    padding: 28px 24px 18px 24px;
+    min-width: 350px;
+    max-width: 540px;
+    width: 96vw;
+    font-size: 1.06em;
+  }
+  .settings-section-title {
+    font-size: 1.13em;
+    font-weight: bold;
+    margin-bottom: 12px;
+    margin-top: 10px;
+    color: var(--primary-dark);
+    letter-spacing: .5px;
+  }
+  .form-block {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 15px;
+  }
+  .form-block label {
+    font-size: .97em;
+    color: var(--primary-dark);
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  input, select, textarea {
+    font-size: 1em;
+    padding: 8px 10px;
+    border-radius: 7px;
+    border: 1.5px solid var(--border);
+    background: #fafdff;
+    color: var(--text);
+    transition: border .2s;
+    margin-bottom: 0;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+    background: #fff;
+  }
+  textarea {
+    min-height: 36px;
+    font-family: 'Fira Mono','Consolas',monospace;
+    resize: vertical;
+  }
+  .primary-btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 10px 0;
+    font-size: 1.06em;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 7px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px #347cfb12;
+    transition: background .18s, box-shadow .18s;
+  }
+  .primary-btn:hover,
+  .primary-btn:focus {
+    background: var(--primary-dark);
+    box-shadow: 0 2px 16px #347cfb26;
+  }
+  .settings-split {
+    border: none;
+    border-top: 1.5px solid var(--border);
+    margin: 24px 0 18px 0;
+  }
+  
+  .mini-title {
+    font-size: .98em;
+    font-weight: 500;
+    color: #7a8ca6;
+    margin: 10px 0 7px 2px;
+  }
+  .mini-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 15px;
+  }
+  .mini-card {
+    display: flex;
+    align-items: center;
+    background: var(--primary-light);
+    border-radius: 8px;
+    border: 1.2px solid #e0e5ee;
+    padding: 7px 12px 7px 13px;
+    font-size: .98em;
+    color: #2550a1;
+    gap: 8px;
+    position: relative;
+    transition: box-shadow .2s, border .2s;
+  }
+  .mini-card.selected {
+    background: #e6fbe9;
+    border: 1.7px solid #39c5bb;
+    color: #16896a;
+  }
+  .mini-card .mini-card-name {
+    flex: 1;
+    font-weight: 500;
+    word-break: break-all;
+  }
+  .mini-card .mini-btn {
+    background: #fafdff;
+    border: 1.2px solid #b4c2d0;
+    color: #4a81fa;
+    border-radius: 6px;
+    font-size: .97em;
+    padding: 2px 13px;
+    cursor: pointer;
+    margin-left: 4px;
+    margin-right: 0;
+    transition: background .18s, border .18s;
+  }
+  .mini-card .mini-btn.selected {
+    background: #39c5bb;
+    color: #fff;
+    border-color: #16896a;
+  }
+  .mini-card .mini-btn.delete {
+    color: #c92222;
+    border-color: #e0b1b5;
+    background: #fff0f0;
+  }
+  .mini-card .mini-btn.delete:hover {
+    background: #ffeaea;
+    border-color: #c92222;
+  }
+  .mini-card .mini-btn i {
+    font-style: normal;
+    font-size: 1.1em;
+  }
+  .assistant-select {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 7px;
+    border: 1.2px solid var(--border);
+    margin-top: 5px;
+    font-size: 1.05em;
+  }
+  
+  /* 适配弹窗 */
+  .settings-modal-card form {
+    margin-bottom: 0;
+  }
+  
+
+  .modal-content {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 6px 40px #0003;
+    padding: 0 0 18px 0;
+    min-width: 550px;
+    max-width: 710px;
+    width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+  .settings-modal-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 32px #0a0a1a12;
+    padding: 28px 24px 18px 24px;
+    min-width: 480px;
+    max-width: 650px;
+    width: 100%;
+    font-size: 1.06em;
+  }
+  .settings-modal-card input,
+  .settings-modal-card select,
+  .settings-modal-card textarea {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  @media (max-width: 700px){
+    .modal-content, .settings-modal-card {
+      min-width: 0;
+      max-width: 99vw;
+      width: 99vw;
+      padding: 0 0 12px 0;
+    }
   }
   

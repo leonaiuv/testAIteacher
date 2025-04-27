@@ -4,67 +4,72 @@ function renderAISettingsModal() {
     const section = document.getElementById("ai-settings-section-modal");
     // 注意这里用和原renderAISettings一样的代码，但id等要和弹窗内一致
     section.innerHTML = `
-      <div class="card" style="max-width:540px;">
-        <div class="card-title"><span class="icon">⚙️</span>AI 设置和助手选择</div>
-        <div class="card-desc">配置你的AI厂商API信息，选择/自定义AI助手角色和提示词。</div>
-        <form id="api-pack-form">
-          <div class="form-group">
-            <label>厂商</label>
-            <select id="api-vendor">
-              <option value="deepseek">deepseek</option>
-              <option value="qwen">阿里通义Qwen</option>
-              <option value="aihubmix">AihubMix</option>
-              <option value="volcengine">火山引擎豆包</option>
-              <option value="moonshot">Moonshot</option>
-              <option value="zhipu">智谱AI</option>
-              <option value="minimax">MiniMax</option>
-              <option value="spark">讯飞星火</option>
-              <option value="ali">阿里通义(兼容openai)</option>
-              <option value="baidu">百度文心</option>
-              <option value="360">360智脑</option>
-              <option value="custom">其它OpenAI兼容</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>API Key</label>
-            <input type="password" id="api-key" required placeholder="请输入API key">
-          </div>
-          <div class="form-group">
-            <label>Base URL</label>
-            <input type="text" id="api-baseurl" required placeholder="API Base URL">
-          </div>
-          <div class="form-group">
-            <label>模型名称</label>
-            <input type="text" id="api-model" required placeholder="模型名称，如 deepseek-coder">
-          </div>
-          <div class="form-group">
-            <label>系统提示词</label>
-            <textarea id="api-system-prompt" rows="2" placeholder="可选，覆盖默认系统提示词"></textarea>
-          </div>
-          <div class="form-group">
-            <label>API包名</label>
-            <input type="text" id="api-pack-name" required placeholder="自定义包名">
-          </div>
-          <button type="submit">保存API包</button>
-        </form>
-        <div id="api-packs-list"></div>
-        <hr>
-        <form id="prompt-pack-form">
-          <div class="form-group">
-            <label>提示词内容</label>
-            <textarea id="prompt-pack-prompt" rows="3"></textarea>
-          </div>
-          <div class="form-group">
-            <label>提示词包名</label>
-            <input type="text" id="prompt-pack-name" placeholder="自定义提示词包名">
-          </div>
-          <button type="submit">保存自定义提示词包</button>
-        </form>
-        <div class="select-assistant">
-          <label>选择AI助手/提示词包</label>
-          <select id="assistant-select"></select>
-        </div>
-      </div>
+      <div class="settings-modal-card">
+  <div class="settings-section-title">API厂商配置</div>
+  <form id="api-pack-form" autocomplete="off">
+    <div class="form-block">
+      <label>厂商</label>
+      <select id="api-vendor">
+        <option value="deepseek">deepseek</option>
+        <option value="qwen">阿里通义Qwen</option>
+        <option value="aihubmix">AihubMix</option>
+        <option value="volcengine">火山引擎豆包</option>
+        <option value="moonshot">Moonshot</option>
+        <option value="zhipu">智谱AI</option>
+        <option value="minimax">MiniMax</option>
+        <option value="spark">讯飞星火</option>
+        <option value="ali">阿里通义(兼容openai)</option>
+        <option value="baidu">百度文心</option>
+        <option value="360">360智脑</option>
+        <option value="custom">其它OpenAI兼容</option>
+      </select>
+    </div>
+    <div class="form-block">
+      <label>API Key</label>
+      <input type="password" id="api-key" required placeholder="请输入API key">
+    </div>
+    <div class="form-block">
+      <label>Base URL</label>
+      <input type="text" id="api-baseurl" required placeholder="API Base URL">
+    </div>
+    <div class="form-block">
+      <label>模型名称</label>
+      <input type="text" id="api-model" required placeholder="模型名称，如 deepseek-coder">
+    </div>
+    <div class="form-block">
+      <label>系统提示词（可选）</label>
+      <textarea id="api-system-prompt" rows="2" placeholder="可选，覆盖默认系统提示词"></textarea>
+    </div>
+    <div class="form-block">
+      <label>API包名</label>
+      <input type="text" id="api-pack-name" required placeholder="自定义包名">
+    </div>
+    <button type="submit" class="primary-btn">保存API包</button>
+  </form>
+  <div class="mini-title">已保存API包</div>
+  <div id="api-packs-list" class="mini-card-list"></div>
+
+  <hr class="settings-split">
+
+  <div class="settings-section-title">提示词助手配置</div>
+  <form id="prompt-pack-form" autocomplete="off">
+    <div class="form-block">
+      <label>提示词内容</label>
+      <textarea id="prompt-pack-prompt" rows="3"></textarea>
+    </div>
+    <div class="form-block">
+      <label>提示词包名</label>
+      <input type="text" id="prompt-pack-name" placeholder="自定义提示词包名">
+    </div>
+    <button type="submit" class="primary-btn">保存提示词包</button>
+  </form>
+  <div class="mini-title">已保存提示词包</div>
+  <div id="prompt-packs-list" class="mini-card-list"></div>
+
+  <div class="settings-section-title" style="margin-top:20px;">选择AI助手/提示词包</div>
+  <select id="assistant-select" class="assistant-select"></select>
+</div>
+
     `;
     renderApiPacksList();
     renderAssistantSelect();
@@ -80,6 +85,10 @@ function renderAISettingsModal() {
         name: document.getElementById("api-pack-name").value
       };
       saveApiPack(pack);
+      // 保存后隐藏引导
+document.getElementById("settings-guide-tip").style.display = "none";
+document.getElementById("show-settings-btn").classList.remove("guide-highlight");
+
       renderApiPacksList();
       alert("API包已保存！");
     };
@@ -194,6 +203,10 @@ function showProgressBar() {
         name: document.getElementById("api-pack-name").value
       };
       saveApiPack(pack);
+      // 保存后隐藏引导
+document.getElementById("settings-guide-tip").style.display = "none";
+document.getElementById("show-settings-btn").classList.remove("guide-highlight");
+
       renderApiPacksList();
       alert("API包已保存！");
     };
@@ -225,21 +238,38 @@ function showProgressBar() {
   function renderApiPacksList() {
     const listDiv = document.getElementById("api-packs-list");
     const packs = getApiPacks();
+    listDiv.innerHTML = "";
     if (packs.length === 0) {
-      listDiv.innerHTML = "<div class='card-desc' style='margin-top:10px;'>暂无API包，填写上方表单保存。</div>";
+      listDiv.innerHTML = "<div style='color:#aaa;font-size:.98em;padding:6px 0;'>暂无API包</div>";
       return;
     }
-    listDiv.innerHTML = `<div style="margin:6px 0 3px 0;font-weight:500;color:#347cfb;">已保存API包：</div>`;
     packs.forEach((p, i) => {
+      const selected = localStorage.getItem("selected_api_pack");
+      const isSel = selected && JSON.parse(selected).name === p.name;
       listDiv.innerHTML += `
-        <div class="api-pack-card">
-          <b>🔑 ${p.vendor} - ${p.name} (${p.model})</b>
-          <button onclick="onSelectApiPack(${i})">选用</button>
-          <button onclick="onDeleteApiPack('${p.name}','${p.vendor}')">删除</button>
+        <div class="mini-card${isSel ? " selected":""}">
+          <span class="mini-card-name">🔑 ${p.vendor} - ${p.name} <span style="font-size:92%;color:#888;">(${p.model})</span></span>
+          <button class="mini-btn${isSel ? " selected":""}" onclick="onSelectApiPack(${i})"><i>✓</i>选用</button>
+          <button class="mini-btn delete" onclick="onDeleteApiPack('${p.name}','${p.vendor}')"><i>🗑</i>删除</button>
         </div>
       `;
     });
   }
+  function renderPromptPacksList() {
+    const listDiv = document.getElementById("prompt-packs-list");
+    const packs = getPromptPacks();
+    listDiv.innerHTML = "";
+    packs.forEach((p, i) => {
+      listDiv.innerHTML += `
+        <div class="mini-card">
+          <span class="mini-card-name">💡${p.name}</span>
+          <button class="mini-btn" onclick="onSelectPromptPack(${i})"><i>✓</i>选用</button>
+          <button class="mini-btn delete" onclick="onDeletePromptPack('${p.name}')"><i>🗑</i>删除</button>
+        </div>
+      `;
+    });
+  }
+  
   
   function onSelectApiPack(idx) {
     const packs = getApiPacks();
