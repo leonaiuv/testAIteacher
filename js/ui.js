@@ -1,5 +1,113 @@
 // ui.js
-
+// 渲染弹窗内容
+function renderAISettingsModal() {
+    const section = document.getElementById("ai-settings-section-modal");
+    // 注意这里用和原renderAISettings一样的代码，但id等要和弹窗内一致
+    section.innerHTML = `
+      <div class="card" style="max-width:540px;">
+        <div class="card-title"><span class="icon">⚙️</span>AI 设置和助手选择</div>
+        <div class="card-desc">配置你的AI厂商API信息，选择/自定义AI助手角色和提示词。</div>
+        <form id="api-pack-form">
+          <div class="form-group">
+            <label>厂商</label>
+            <select id="api-vendor">
+              <option value="deepseek">deepseek</option>
+              <option value="qwen">阿里通义Qwen</option>
+              <option value="aihubmix">AihubMix</option>
+              <option value="volcengine">火山引擎豆包</option>
+              <option value="moonshot">Moonshot</option>
+              <option value="zhipu">智谱AI</option>
+              <option value="minimax">MiniMax</option>
+              <option value="spark">讯飞星火</option>
+              <option value="ali">阿里通义(兼容openai)</option>
+              <option value="baidu">百度文心</option>
+              <option value="360">360智脑</option>
+              <option value="custom">其它OpenAI兼容</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>API Key</label>
+            <input type="password" id="api-key" required placeholder="请输入API key">
+          </div>
+          <div class="form-group">
+            <label>Base URL</label>
+            <input type="text" id="api-baseurl" required placeholder="API Base URL">
+          </div>
+          <div class="form-group">
+            <label>模型名称</label>
+            <input type="text" id="api-model" required placeholder="模型名称，如 deepseek-coder">
+          </div>
+          <div class="form-group">
+            <label>系统提示词</label>
+            <textarea id="api-system-prompt" rows="2" placeholder="可选，覆盖默认系统提示词"></textarea>
+          </div>
+          <div class="form-group">
+            <label>API包名</label>
+            <input type="text" id="api-pack-name" required placeholder="自定义包名">
+          </div>
+          <button type="submit">保存API包</button>
+        </form>
+        <div id="api-packs-list"></div>
+        <hr>
+        <form id="prompt-pack-form">
+          <div class="form-group">
+            <label>提示词内容</label>
+            <textarea id="prompt-pack-prompt" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label>提示词包名</label>
+            <input type="text" id="prompt-pack-name" placeholder="自定义提示词包名">
+          </div>
+          <button type="submit">保存自定义提示词包</button>
+        </form>
+        <div class="select-assistant">
+          <label>选择AI助手/提示词包</label>
+          <select id="assistant-select"></select>
+        </div>
+      </div>
+    `;
+    renderApiPacksList();
+    renderAssistantSelect();
+  
+    document.getElementById("api-pack-form").onsubmit = function(e) {
+      e.preventDefault();
+      const pack = {
+        vendor: document.getElementById("api-vendor").value,
+        apiKey: document.getElementById("api-key").value,
+        baseUrl: document.getElementById("api-baseurl").value,
+        model: document.getElementById("api-model").value,
+        systemPrompt: document.getElementById("api-system-prompt").value,
+        name: document.getElementById("api-pack-name").value
+      };
+      saveApiPack(pack);
+      renderApiPacksList();
+      alert("API包已保存！");
+    };
+  
+    document.getElementById("prompt-pack-form").onsubmit = function(e) {
+      e.preventDefault();
+      const pack = {
+        name: document.getElementById("prompt-pack-name").value,
+        systemPrompt: document.getElementById("prompt-pack-prompt").value
+      };
+      if (!pack.name) {
+        alert("请填写提示词包名称");
+        return;
+      }
+      savePromptPack(pack);
+      renderAssistantSelect();
+      alert("自定义提示词包已保存！");
+    };
+  
+    document.getElementById("assistant-select").onchange = function() {
+      const packs = getPromptPacks();
+      const selIdx = this.selectedIndex;
+      const pack = packs[selIdx];
+      document.getElementById("prompt-pack-prompt").value = pack.systemPrompt;
+      document.getElementById("prompt-pack-name").value = pack.name;
+    };
+  }
+  
 function showProgressBar() {
     const bar = document.getElementById("progress-bar");
     bar.style.display = "block";
@@ -25,7 +133,11 @@ function showProgressBar() {
         <form id="api-pack-form">
           <div class="form-group">
             <label>厂商</label>
-            <select id="api-vendor"><option value="deepseek">deepseek</option></select>
+<select id="api-vendor">
+  <option value="deepseek">deepseek</option>
+  <option value="custom">其他开</option>
+</select>
+
           </div>
           <div class="form-group">
             <label>API Key</label>

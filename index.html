@@ -14,6 +14,18 @@
     </div>
   </header>
   <div id="progress-bar" style="display:none"></div>
+  <!-- 悬浮设置按钮（默认显示） -->
+<button id="show-settings-btn" title="AI设置" class="floating-settings-btn">
+    <span class="icon">⚙️</span>
+  </button>
+  <!-- 设置弹窗 -->
+  <div id="ai-settings-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span id="close-settings-modal" class="close-btn" title="关闭">×</span>
+      <section id="ai-settings-section-modal"></section>
+    </div>
+  </div>
+  
   <main id="container">
     <div id="main-flex-row">
       <section id="ai-settings-section"></section>
