@@ -1,88 +1,316 @@
-/* 基础布局 */
-body {
-    font-family: "Helvetica Neue", Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    background: #f5f7fa;
+:root {
+    --primary: #347cfb;
+    --primary-light: #eaf1fc;
+    --primary-dark: #174dbe;
+    --bg: #f3f5fa;
+    --card-bg: #fff;
+    --border: #e2e8f0;
+    --accent: #39c5bb;
+    --text: #252f42;
+    --text-light: #607087;
+    --radius: 12px;
+    --shadow: 0 4px 24px #0001;
+  }
+  
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: var(--bg);
     margin: 0;
-    padding: 0;
-    color: #333;
+    color: var(--text);
+    min-height: 100vh;
   }
-  #container {
-    max-width: 900px;
-    margin: 30px auto;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 6px 32px #0001;
-    padding: 30px;
-  }
-  section {
-    margin-bottom: 36px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid #eee;
-  }
-  section:last-child { border-bottom: none; }
-  
-  h2 {
-    font-size: 1.4em;
-    margin-top: 0;
-  }
-  
-  label {
-    display: block;
-    margin: 12px 0 4px;
-    font-weight: bold;
-  }
-  input, select, textarea, button {
-    font-size: 1em;
-    padding: 7px 10px;
-    margin-bottom: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+  header {
     width: 100%;
-    box-sizing: border-box;
-  }
-  button {
-    width: auto;
-    background: #3e7bfa;
+    background: var(--primary);
     color: #fff;
-    border: none;
-    cursor: pointer;
-    transition: background .2s;
+    padding: 18px 0 14px 0;
+    box-shadow: 0 2px 12px #0002;
+  }
+  .logo-title {
+    max-width: 1100px;
+    margin: 0 auto;
+    font-size: 1.65em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+  }
+  .logo-title img {
     margin-right: 10px;
   }
-  button:hover { background: #1255b7; }
-  
-  .code-block {
-    background: #292d3e;
-    color: #fff;
-    font-family: "Fira Mono", "Consolas", "Menlo", monospace;
-    border-radius: 5px;
-    padding: 12px;
-    margin-bottom: 8px;
-    overflow-x: auto;
-    min-height: 80px;
+  main#container {
+    max-width: 1200px;
+    margin: 36px auto 30px auto;
+    padding: 0 16px;
   }
   
-  .stream-output {
-    min-height: 80px;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    padding: 10px;
-    background: #fafbfc;
-    margin-bottom: 8px;
-    font-family: "Fira Mono", monospace;
+  #main-flex-row {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: stretch;
+  }
+  section {
+    flex: 1 1 0px;
+    min-width: 340px;
+    max-width: 440px;
+    margin-bottom: 0;
+    padding:0;
+  }
+  
+  /* 卡片样式 */
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 22px 22px 22px;
+    margin-bottom: 20px;
+    border: 1.5px solid var(--border);
+    min-height: 100px;
+  }
+  .card-title {
+    font-size: 1.18em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: var(--primary-dark);
+    display:flex;
+    align-items: center;
+    gap:7px;
+  }
+  .card-title .icon {
+    font-size: 1.5em;
+    margin-right: 7px;
+  }
+  .card-desc {
+    color: var(--text-light);
+    font-size: .98em;
+    margin-bottom: 12px;
+  }
+  
+  /* 表单美化和对齐 */
+  .form-group {
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+  label {
+    font-weight: 500;
+    min-width: 80px;
+    color: var(--primary-dark);
+    font-size: .99em;
+  }
+  input, select, textarea {
+    flex:1;
+    font-size: 1em;
+    padding: 8px 10px;
+    border-radius: 7px;
+    border: 1.5px solid var(--border);
+    background: #fafdff;
+    color: var(--text);
+    transition: border .2s;
+    margin-bottom: 0;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+    background: #fff;
+  }
+  textarea {
+    min-height: 36px;
+    font-family: 'Fira Mono','Consolas',monospace;
+    resize: vertical;
+  }
+  button {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-size: 1em;
+    cursor: pointer;
+    font-weight: 500;
+    margin-right: 9px;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    box-shadow: 0 2px 8px #347cfb12;
+    transition: background .18s, box-shadow .18s;
+  }
+  button:hover, button:focus {
+    background: var(--primary-dark);
+    box-shadow: 0 2px 16px #347cfb26;
+  }
+  button:active {
+    background: var(--accent);
+  }
+  
+  /* API包和提示词卡片 */
+  .api-pack-card {
+    background: var(--primary-light);
+    border: 1.3px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    margin-bottom: 7px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+  .api-pack-card b {
+    color: var(--primary-dark);
+  }
+  .api-pack-card button {
+    padding: 4px 11px;
+    font-size: .96em;
+    margin-right: 0;
+  }
+  .select-assistant {
+    margin: 12px 0 0 0;
+  }
+  .select-assistant select {
+    max-width: 200px;
+    font-size:.98em;
+  }
+  
+  #api-packs-list,#prompt-packs-list {
+    margin-top: 3px;
+    margin-bottom: 7px;
+  }
+  
+  /* 题目区 */
+  .quiz-questions-list {
+    margin-top: 10px;
+  }
+  .quiz-question-card {
+    background: #f8fafd;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    margin-bottom: 13px;
+    padding: 11px 13px 6px 13px;
+    box-shadow: 0 2px 8px #0001;
+  }
+  .quiz-question-title {
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 1.07em;
+    margin-bottom: 2px;
+    display:flex; align-items:center;gap:4px;
+  }
+  .quiz-question-desc {
+    font-size: .97em;
+    color: var(--text-light);
+    margin-bottom: 3px;
+  }
+  .code-block-view {
+    background: #eef4fb;
+    color: #2c3440;
+    font-family: 'Fira Mono','Consolas',monospace;
+    border-radius: 6px;
+    padding: 7px 9px 7px 13px;
+    margin-bottom: 2px;
+    font-size: .98em;
+    overflow-x: auto;
+    border: 1px solid #e0e5ee;
     white-space: pre-wrap;
   }
   
-  .flex-row {
-    display: flex;
-    gap: 20px;
+  textarea.code-block.quiz-answer {
+    background: #23272e;
+    color: #e3eaf2;
+    font-size: 1em;
+    font-family: 'Fira Mono','Consolas',monospace;
+    border-radius: 6px;
+    min-height: 80px;
+    margin-top: 8px;
+    border: 1.5px solid #1e2530;
+    width: 97%;
+    transition: border .2s;
+    padding:8px 10px;
   }
-  .flex-col {
-    flex: 1;
+  textarea.code-block.quiz-answer:focus {
+    border: 1.5px solid var(--primary);
+    background: #23272e;
+    color: #fff;
   }
   
-  .select-assistant {
-    margin-top: 10px;
-    margin-bottom: 14px;
+  /* 流式输出 */
+  .stream-output {
+    min-height: 48px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 11px;
+    background: #f8fbfc;
+    margin-bottom: 10px;
+    font-family: 'Fira Mono',monospace;
+    color: #365;
+    font-size: .99em;
+    white-space: pre-wrap;
+    box-shadow: 0 2px 6px #0001;
+  }
+  #review-output-block .stream-output {
+    background: #f5f8ef;
+    color: #287c41;
+    border: 1.5px solid #b3e0c2;
+  }
+  
+  /* 进度条 */
+  #progress-bar {
+    position: fixed;
+    left: 0; top: 0; right:0;
+    height: 4px;
+    z-index: 9999;
+    background: linear-gradient(90deg, var(--primary) 30%, var(--accent) 100%);
+    transition: width .22s;
+    width: 0;
+    box-shadow: 0 0 8px #347cfb60;
+    animation: loading-bar 2s infinite linear;
+    border-radius: 0 3px 3px 0;
+  }
+  @keyframes loading-bar {
+    0% { width: 10vw;}
+    60% { width: 70vw;}
+    100% { width: 95vw; }
+  }
+  
+  #clear-review-btn {
+    float:right;
+    background:#e0e8f0;
+    color:#347cfb;
+    margin:0 0 10px 0;
+    padding:3px 15px;
+    font-size:.97em;
+    border-radius:6px;
+    border:1px solid #c9d6ec;
+    box-shadow:none;
+  }
+  #clear-review-btn:hover {
+    background:#eaf1fc;
+    color:#174dbe;
+    border-color:#347cfb;
+  }
+  @media (max-width: 1100px) {
+    #main-flex-row {flex-direction: column;}
+    section {max-width: 900px; min-width: 0;}
+  }
+  @media (max-width: 600px) {
+    #main-flex-row {flex-direction: column;}
+    section {max-width: 100vw; min-width: 0;}
+    .card {padding:15px 4px 13px 7px;}
+  }
+  
+  /* 辅助样式 */
+  a { color: var(--primary); text-decoration: none;}
+  a:hover { text-decoration: underline; }
+  hr { border: none; border-top: 1.5px solid var(--border); margin: 22px 0; }
+  ::-webkit-scrollbar { height:8px; width:8px; background:#e0e0e0;}
+  ::-webkit-scrollbar-thumb { background: #b2c7e2; border-radius: 8px; }
+  footer {
+    background: #e8f0fe;
+    color: #5c6f8c;
+    text-align: center;
+    padding: 20px 0 12px 0;
+    font-size: .97em;
+    letter-spacing: .2px;
+    width: 100%;
   }
   
