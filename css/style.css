@@ -20,13 +20,19 @@
     min-height: 100vh;
     padding-bottom: 60px;
   }
-  header {
-    width: 100%;
-    background: var(--primary);
-    color: #fff;
-    padding: 18px 0 14px 0;
-    box-shadow: 0 2px 12px #0002;
-  }
+header {
+  width: 85%;
+  background: var(--primary);
+  color: #fff;
+  padding: 18px 0 14px 0;
+  box-shadow: 0 2px 12px #0002;
+  /* 通过设置左右外边距为 auto 实现水平居中 */
+  margin-left: auto;
+  margin-right: auto;
+  /* 设置下方两个圆角为10px，上方两个角无圆角 */
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
   .logo-title {
     max-width: 1100px;
     margin: 0 auto;
@@ -35,6 +41,7 @@
     letter-spacing: 1px;
     display: flex;
     align-items: center;
+    justify-content: center;
   }
   .logo-title img {
     margin-right: 10px;
@@ -61,13 +68,13 @@
   }
   
   #quiz-section {
-    flex: 65 1 0%;
+    flex: 55 1 0%;
     min-width: 340px;
     max-width: none;
   }
   
   #review-section {
-    flex: 15 1 0%;
+    flex: 25 1 0%;
     min-width: 200px;
     max-width: none;
   }
@@ -95,8 +102,9 @@
     gap:7px;
   }
   .card-title .icon {
-    font-size: 1.5em;
-    margin-right: 7px;
+    font-size: 1.3em; /* Slightly smaller icon */
+    margin-right: 4px; /* Reduced margin */
+    line-height: 1; /* Align icon better with text */
   }
   .card-desc {
     color: var(--text-light);
@@ -112,10 +120,12 @@
   }
   label {
     font-weight: 500;
-    min-width: 100px;
+    min-width: 100px; /* Keep minimum width for alignment */
     color: var(--primary-dark);
     font-size: .99em;
     text-align: left;
+    margin-bottom: 3px; /* Add small bottom margin when stacked */
+    display: block; /* Ensure label is block for margin */
   }
   input, select, textarea {
     flex:1;
@@ -154,8 +164,13 @@
     margin-right: 9px;
     margin-top: 6px;
     margin-bottom: 4px;
-    box-shadow: 0 2px 8px #347cfb12;
-    transition: background .18s, box-shadow .18s;
+    box-shadow: 0 2px 8px #347cfb18; /* Slightly stronger shadow */
+    transition: background .18s, box-shadow .18s, transform .1s;
+    text-align: center;
+  }
+  button:active {
+    transform: scale(0.98);
+    background: var(--accent);
   }
   button:hover, button:focus {
     background: var(--primary-dark);
@@ -182,7 +197,7 @@
   .api-pack-card button {
     padding: 4px 11px;
     font-size: .96em;
-    margin-right: 0;
+    margin: 0; /* Remove default button margins */
   }
   .select-assistant {
     margin: 12px 0 0 0;
@@ -258,28 +273,30 @@
     min-height: 48px;
     border: 1.5px solid var(--border);
     border-radius: 8px;
-    padding: 10px 11px;
+    padding: 10px 13px;
     background: #f8fbfc;
     margin-bottom: 10px;
     font-family: 'Fira Mono',monospace;
-    color: #365;
+    color: #335050; /* Slightly adjusted color */
     font-size: .99em;
     white-space: pre-wrap;
-    box-shadow: 0 2px 6px #0001;
-    word-break: break-all;
+    box-shadow: inset 0 1px 3px #0000000a; /* Inner shadow for depth */
+    word-break: break-word; /* Prefer break-word over break-all */
     max-width: 100%;
+    box-sizing: border-box; /* Ensure padding doesn't overflow */
   }
   #review-output-block .stream-output {
-    background: #f5f8ef;
-    color: #287c41;
+    background: #f3f9f0; /* Slightly lighter green background */
+    color: #226b38;
     border: 1.5px solid #b3e0c2;
     white-space: pre-wrap;
-    word-break: break-all;
+    word-break: break-word;
     overflow-x: auto;
     box-sizing: border-box;
     max-width: 100%;
     max-height: 72vh;
     overflow-y: auto;
+    box-shadow: inset 0 1px 3px #0000000a;
   }
   
   #progress-bar {
@@ -336,6 +353,13 @@
     justify-content: center;
     cursor: pointer;
     transition: background .18s, box-shadow .18s;
+  }
+  .floating-settings-btn .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1; /* Ensure icon vertical alignment */
+    height: 100%; /* Ensure icon takes full height for centering */
   }
   .floating-settings-btn.guide-highlight {
     box-shadow: 0 0 0 4px #ffe3a3, 0 4px 24px #347cfb33;
@@ -624,30 +648,6 @@
   .settings-modal-card form {
     margin-bottom: 0;
   }
-  
-
-  .modal-content {
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 6px 40px #0003;
-    padding: 0 0 18px 0;
-    min-width: 550px;
-    max-width: 710px;
-    width: 95vw;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-  }
-  .settings-modal-card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 32px #0a0a1a12;
-    padding: 28px 24px 18px 24px;
-    min-width: 480px;
-    max-width: 650px;
-    width: 100%;
-    font-size: 1.06em;
-  }
   .settings-modal-card input,
   .settings-modal-card select,
   .settings-modal-card textarea {
@@ -655,12 +655,9 @@
     min-width: 0;
     box-sizing: border-box;
   }
+  /* Remove redundant modal styles defined earlier */
+  /* .settings-modal-card inherits base modal styles */
   @media (max-width: 700px){
-    .modal-content, .settings-modal-card {
-      min-width: 0;
-      max-width: 99vw;
-      width: 99vw;
-      padding: 0 0 12px 0;
-    }
+    
   }
   

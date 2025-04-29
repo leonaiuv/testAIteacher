@@ -1,76 +1,95 @@
 // ui.js
 // 渲染弹窗内容
-function renderAISettingsModal() {
-    const section = document.getElementById("ai-settings-section-modal");
-    // 注意这里用和原renderAISettings一样的代码，但id等要和弹窗内一致
+/**
+ * 渲染通用的AI设置界面
+ * @param {string} sectionId - 要渲染到的section元素ID
+ * @param {boolean} isModal - 是否为模态窗口渲染
+ */
+function renderAISettingsCommon(sectionId, isModal) {
+    const section = document.getElementById(sectionId);
+    const containerClass = isModal ? "settings-modal-card" : "card";
+    const titleClass = isModal ? "settings-section-title" : "card-title";
+    const formClass = isModal ? "form-block" : "form-group";
+    const buttonClass = isModal ? "primary-btn" : "";
+    const autocomplete = isModal ? " autocomplete=\"off\"" : "";
+    const miniCardListClass = isModal ? " class=\"mini-card-list\"" : "";
+    const selectClass = isModal ? " class=\"assistant-select\"" : "";
+    
+    // 构建HTML
     section.innerHTML = `
-      <div class="settings-modal-card">
-  <div class="settings-section-title">API厂商配置</div>
-  <form id="api-pack-form" autocomplete="off">
-    <div class="form-block">
-      <label>厂商</label>
-      <select id="api-vendor">
-        <option value="deepseek">deepseek</option>
-        <option value="qwen">阿里通义Qwen</option>
-        <option value="aihubmix">AihubMix</option>
-        <option value="volcengine">火山引擎豆包</option>
-        <option value="moonshot">Moonshot</option>
-        <option value="zhipu">智谱AI</option>
-        <option value="minimax">MiniMax</option>
-        <option value="spark">讯飞星火</option>
-        <option value="ali">阿里通义(兼容openai)</option>
-        <option value="baidu">百度文心</option>
-        <option value="360">360智脑</option>
-        <option value="custom">其它OpenAI兼容</option>
-      </select>
-    </div>
-    <div class="form-block">
-      <label>API Key</label>
-      <input type="password" id="api-key" required placeholder="请输入API key">
-    </div>
-    <div class="form-block">
-      <label>Base URL</label>
-      <input type="text" id="api-baseurl" required placeholder="API Base URL">
-    </div>
-    <div class="form-block">
-      <label>模型名称</label>
-      <input type="text" id="api-model" required placeholder="模型名称，如 deepseek-coder">
-    </div>
-    <div class="form-block">
-      <label>系统提示词（可选）</label>
-      <textarea id="api-system-prompt" rows="2" placeholder="可选，覆盖默认系统提示词"></textarea>
-    </div>
-    <div class="form-block">
-      <label>API包名</label>
-      <input type="text" id="api-pack-name" required placeholder="自定义包名">
-    </div>
-    <button type="submit" class="primary-btn">保存API包</button>
-  </form>
-  <div class="mini-title">已保存API包</div>
-  <div id="api-packs-list" class="mini-card-list"></div>
+      <div class="${containerClass}">
+        ${!isModal ? '<div class="card-title"><span class="icon">⚙️</span>AI 设置和助手选择</div>' : ''}
+        ${!isModal ? '<div class="card-desc">配置你的AI厂商API信息，选择/自定义AI助手角色和提示词。</div>' : ''}
+        ${isModal ? '<div class="settings-section-title">API厂商配置</div>' : ''}
+        <form id="api-pack-form"${autocomplete}>
+          <div class="${formClass}">
+            <label>厂商</label>
+            <select id="api-vendor">
+              <option value="deepseek">deepseek</option>
+              <option value="qwen">阿里通义Qwen</option>
+              <option value="aihubmix">AihubMix</option>
+              <option value="volcengine">火山引擎豆包</option>
+              <option value="moonshot">Moonshot</option>
+              <option value="zhipu">智谱AI</option>
+              <option value="minimax">MiniMax</option>
+              <option value="spark">讯飞星火</option>
+              <option value="ali">阿里通义(兼容openai)</option>
+              <option value="baidu">百度文心</option>
+              <option value="360">360智脑</option>
+              <option value="custom">其它OpenAI兼容</option>
+            </select>
+          </div>
+          <div class="${formClass}">
+            <label>API Key</label>
+            <input type="password" id="api-key" required placeholder="请输入API key">
+          </div>
+          <div class="${formClass}">
+            <label>Base URL</label>
+            <input type="text" id="api-baseurl" required placeholder="API Base URL">
+          </div>
+          <div class="${formClass}">
+            <label>模型名称</label>
+            <input type="text" id="api-model" required placeholder="模型名称，如 deepseek-coder">
+          </div>
+          <div class="${formClass}">
+            <label>系统提示词${isModal ? '（可选）' : ''}</label>
+            <textarea id="api-system-prompt" rows="2" placeholder="可选，覆盖默认系统提示词"></textarea>
+          </div>
+          <div class="${formClass}">
+            <label>API包名</label>
+            <input type="text" id="api-pack-name" required placeholder="自定义包名">
+          </div>
+          <button type="submit" class="${buttonClass}">保存API包</button>
+        </form>
+        ${isModal ? '<div class="mini-title">已保存API包</div>' : ''}
+        <div id="api-packs-list"${miniCardListClass}></div>
 
-  <hr class="settings-split">
+        ${isModal ? '<hr class="settings-split">' : '<hr>'}
 
-  <div class="settings-section-title">提示词助手配置</div>
-  <form id="prompt-pack-form" autocomplete="off">
-    <div class="form-block">
-      <label>提示词内容</label>
-      <textarea id="prompt-pack-prompt" rows="3"></textarea>
-    </div>
-    <div class="form-block">
-      <label>提示词包名</label>
-      <input type="text" id="prompt-pack-name" placeholder="自定义提示词包名">
-    </div>
-    <button type="submit" class="primary-btn">保存提示词包</button>
-  </form>
-  <div class="mini-title">已保存提示词包</div>
-  <div id="prompt-packs-list" class="mini-card-list"></div>
+        ${isModal ? '<div class="settings-section-title">提示词助手配置</div>' : ''}
+        <form id="prompt-pack-form"${autocomplete}>
+          <div class="${formClass}">
+            <label>提示词内容</label>
+            <textarea id="prompt-pack-prompt" rows="3"></textarea>
+          </div>
+          <div class="${formClass}">
+            <label>提示词包名</label>
+            <input type="text" id="prompt-pack-name" placeholder="自定义提示词包名">
+          </div>
+          <button type="submit" class="${buttonClass}">保存${isModal ? '' : '自定义'}提示词包</button>
+        </form>
+        ${isModal ? '<div class="mini-title">已保存提示词包</div>' : ''}
+        <div id="prompt-packs-list"${miniCardListClass}></div>
 
-  <div class="settings-section-title" style="margin-top:20px;">选择AI助手/提示词包</div>
-  <select id="assistant-select" class="assistant-select"></select>
-</div>
-
+        ${isModal ? 
+          '<div class="settings-section-title" style="margin-top:20px;">选择AI助手/提示词包</div>' : 
+          '<div class="select-assistant"><label>选择AI助手/提示词包</label></div>'
+        }
+        <select id="assistant-select"${selectClass}></select>
+      </div>
     `;
+    
+    // 渲染列表和设置事件监听
     renderApiPacksList();
     renderAssistantSelect();
   
@@ -86,8 +105,8 @@ function renderAISettingsModal() {
       };
       saveApiPack(pack);
       // 保存后隐藏引导
-document.getElementById("settings-guide-tip").style.display = "none";
-document.getElementById("show-settings-btn").classList.remove("guide-highlight");
+      document.getElementById("settings-guide-tip").style.display = "none";
+      document.getElementById("show-settings-btn").classList.remove("guide-highlight");
 
       renderApiPacksList();
       alert("API包已保存！");
@@ -116,6 +135,20 @@ document.getElementById("show-settings-btn").classList.remove("guide-highlight")
       document.getElementById("prompt-pack-name").value = pack.name;
     };
   }
+
+/**
+ * 渲染弹窗中的AI设置
+ */
+function renderAISettingsModal() {
+  renderAISettingsCommon("ai-settings-section-modal", true);
+}
+
+/**
+ * 渲染主页面中的AI设置
+ */
+function renderAISettings() {
+  renderAISettingsCommon("ai-settings-section", false);
+}
   
 function showProgressBar() {
     const bar = document.getElementById("progress-bar");
@@ -144,7 +177,17 @@ function showProgressBar() {
             <label>厂商</label>
 <select id="api-vendor">
   <option value="deepseek">deepseek</option>
-  <option value="custom">其他开</option>
+  <option value="qwen">阿里通义Qwen</option>
+  <option value="aihubmix">AihubMix</option>
+  <option value="volcengine">火山引擎豆包</option>
+  <option value="moonshot">Moonshot</option>
+  <option value="zhipu">智谱AI</option>
+  <option value="minimax">MiniMax</option>
+  <option value="spark">讯飞星火</option>
+  <option value="ali">阿里通义(兼容openai)</option>
+  <option value="baidu">百度文心</option>
+  <option value="360">360智脑</option>
+  <option value="custom">其它OpenAI兼容</option>
 </select>
 
           </div>
@@ -234,8 +277,22 @@ document.getElementById("show-settings-btn").classList.remove("guide-highlight")
       document.getElementById("prompt-pack-name").value = pack.name;
     };
   }
+
+/**
+ * 渲染弹窗中的AI设置
+ */
+function renderAISettingsModal() {
+  renderAISettingsCommon("ai-settings-section-modal", true);
+}
+
+/**
+ * 渲染主页面中的AI设置
+ */
+function renderAISettings() {
+  renderAISettingsCommon("ai-settings-section", false);
+}
   
-  function renderApiPacksList() {
+function renderApiPacksList() {
     const listDiv = document.getElementById("api-packs-list");
     const packs = getApiPacks();
     listDiv.innerHTML = "";
@@ -301,11 +358,11 @@ document.getElementById("show-settings-btn").classList.remove("guide-highlight")
     const section = document.getElementById("quiz-section");
     section.innerHTML = `
       <div class="card">
-        <div class="card-title"><span class="icon">📋</span>出题</div>
+        <div class="card-title"><img src="img\\闪耀的笔_1745902904.png" style="width: 25px; height: 25px;">出题</div>
         <div class="card-desc">输入你今天学习的内容，AI老师会自动生成针对你的题目。</div>
         <div class="form-group" style="margin-bottom:12px;">
           <label>知识点</label>
-          <textarea id="user-knowledge" rows="2" placeholder="如：数组的声明、push方法、数组长度等"></textarea>
+          <textarea id="user-knowledge" rows="2" placeholder="如：数组的声明、push方法、数组长度等" spellcheck="false"></textarea>
         </div>
         <button id="generate-quiz-btn" style="margin-top:5px;">生成题目</button>
         <div id="quiz-questions-block" class="quiz-questions-list"></div>
@@ -366,7 +423,7 @@ document.getElementById("show-settings-btn").classList.remove("guide-highlight")
         <div class="quiz-question-card">
           <div class="quiz-question-title">📝 ${titleLine.replace(/^(\s*\/\/\s*)/,'')}</div>
           <div class="code-block-view">${tasksHtml}</div>
-          <textarea class="code-block quiz-answer" id="answer-${idx}" placeholder="请在这里输入你的代码"></textarea>
+          <textarea class="code-block quiz-answer" id="answer-${idx}" placeholder="请在这里输入你的代码" spellcheck="false" style="height: 250px;"></textarea>
         </div>
       `;
     });
@@ -413,7 +470,7 @@ document.getElementById("show-settings-btn").classList.remove("guide-highlight")
     const section = document.getElementById("review-section");
     section.innerHTML = `
       <div class="card">
-        <div class="card-title"><span class="icon">🧐</span>批改与反馈
+        <div class="card-title"><img src="img\\检查图标_1745901233.png" rel="icon" style="width:30px; height:30px;">批改与反馈
           <button id="clear-review-btn" title="清空批改结果">清空</button>
         </div>
         <div class="card-desc">提交你的答案后，AI老师会帮你批改并给出建议。</div>
